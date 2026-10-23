@@ -1,71 +1,40 @@
-# 🎓 MindX Scratch Creator — Web Dashboard Dạy Bù & Tự Học
+# 🐱 MindX Scratch Creator — Nền Tảng Học Tập & Luyện Tập Scratch Trực Tuyến
 
-Dashboard học tập trực quan dành cho học sinh MindX học bù hoặc tự luyện tập tại nhà:
-- **Cột trái (65%):** Nhúng trực tiếp Scratch Editor (scratch.mit.edu).
-- **Cột phải (35%):** Đồng hồ đếm ngược 60 phút, Checklist nhiệm vụ, Gợi ý khối lệnh (Hint Code), Nút nộp bài (bắn pháo hoa 🎉) và Bảng ôn tập kiến thức cốt lõi.
-- **Lưu trạng thái (LocalStorage):** Học sinh reload (F5) trang không bị mất tiến độ làm bài, đồng hồ tiếp tục đếm.
+Nền tảng hỗ trợ học viên tự học, luyện tập và làm bài tập lập trình Scratch trực quan, thân thiện:
+- **Khu vực thực hành (Cột trái):** Tích hợp trình soạn thảo Scratch / TurboWarp với đầy đủ bộ tài nguyên nhân vật & phông nền có sẵn.
+- **Bảng hướng dẫn & Nhiệm vụ (Cột phải):** Theo dõi nhiệm vụ chi tiết, hệ thống gợi ý tư duy logic, đồng hồ kiểm soát thời gian làm bài.
+- **Cơ chế kiểm tra tự động:** Tự động đối chiếu mã nguồn khối lệnh của bài làm để đánh giá mức độ hoàn thành và khuyến khích sáng tạo.
+- **Lưu trữ tiến độ (LocalStorage):** Tự động ghi nhớ trạng thái làm bài, học viên có thể tiếp tục bất cứ lúc nào.
 
 ---
 
-## 📂 Cấu trúc thư mục
+## 🚀 Trải Nghiệm Trực Tuyến
 
+Học viên và giáo viên có thể truy cập trực tiếp qua liên kết GitHub Pages:
+- 🏠 **Trang chọn khóa học & bài học:** `https://BaoAnh020603.github.io/mindx-scratch-creator/portal.html`
+- 📚 **Trang thực hành:** `https://BaoAnh020603.github.io/mindx-scratch-creator/index.html`
+
+---
+
+## 📂 Cấu Trúc Dự Án
+
+```text
+mindx-scratch-creator/
+├── portal.html          # Cổng chọn khóa học và bài học
+├── index.html           # Giao diện chính của màn hình làm bài
+├── style.css            # Hệ thống phong cách giao diện và hiệu ứng
+├── script.js            # Xử lý logic làm bài, kiểm tra khối lệnh và đếm giờ
+├── courses.json         # Danh mục các khóa học Scratch
+├── lessons/             # Dữ liệu nội dung các bài học (.json)
+└── projects/            # Tài nguyên file dự án mẫu (.sb3)
 ```
-MindX_Scratch_Creator/
-│
-├── index.html            # Giao diện chính của Dashboard
-├── style.css             # Thiết kế giao diện hiện đại (Dark theme, Animation)
-├── script.js             # Logic đồng hồ, lưu LocalStorage, nộp bài, pháo hoa
-│
-├── lessons/              # Thư mục chứa nội dung từng bài học
-│   └── bai3-phan2.json   # Dữ liệu Bài 3 - Hành Trình Bí Ngô (Phần 2)
-│
-└── README.md             # Hướng dẫn sử dụng & triển khai
-```
 
 ---
 
-## 🚀 Cách chạy thử trên máy tính
+## 🛠️ Cập Nhật & Mở Rộng Bài Học
 
-### Cách 1: Mở trực tiếp (Không cần cài đặt)
-Chỉ cần nhấp đúp chuột vào file `index.html` trong thư mục trên máy tính để mở trên Chrome, Edge hoặc Cốc Cốc. Hệ thống đã tích hợp sẵn cơ chế dự phòng tự động nhận bài học mà không bị lỗi trình duyệt.
-
-### Cách 2: Dùng Live Server (Khuyên dùng khi lập trình)
-1. Mở thư mục này bằng **VS Code**.
-2. Nhấp chuột phải vào `index.html` chọn **Open with Live Server**.
-
----
-
-## ➕ Cách thêm Bài học mới (Ví dụ Bài 4, Bài 5...)
-
-Hệ thống được thiết kế theo kiến trúc module cực kỳ linh hoạt. Bạn không cần sửa lại code giao diện:
-
-1. Vào thư mục `lessons/`, nhân bản file `bai3-phan2.json` thành `bai4.json`.
-2. Chỉnh sửa nội dung các trường:
-   - `id`: Mã bài học (ví dụ: `"bai4"`)
-   - `title`: Tên bài học (ví dụ: `"Bài 4 - Boss Bí Ngô Tấn Công"`)
-   - `tasks`: Danh sách nhiệm vụ và gợi ý code
-   - `knowledge`: Bảng kiến thức ôn tập tổng kết
-3. Truy cập bài học mới bằng cách thêm tham số URL:
-   ```
-   index.html?lesson=bai4
-   ```
-
----
-
-## 🌐 Cách đưa lên GitHub Pages (Miễn phí vĩnh viễn)
-
-Chỉ cần làm 1 lần để có đường link online gửi cho phụ huynh và học sinh:
-
-1. Tạo một tài khoản trên [GitHub](https://github.com/).
-2. Tạo repository mới (ví dụ đặt tên: `mindx-scratch-dashboard`).
-3. Kéo toàn bộ các file trong thư mục này tải lên repository.
-4. Vào **Settings** của repository -> Chọn mục **Pages** ở menu bên trái.
-5. Tại phần **Branch**, chọn nhánh `main` (hoặc `master`) và bấm **Save**.
-6. Sau khoảng 1-2 phút, bạn sẽ nhận được đường link:
-   ```
-   https://<username>.github.io/mindx-scratch-dashboard/
-   ```
-   Khi gửi bài cụ thể cho học sinh:
-   ```
-   https://<username>.github.io/mindx-scratch-dashboard/?lesson=bai3-phan2
-   ```
+1. **Thêm bài học mới:**
+   - Tạo file cấu hình bài học mới trong thư mục `lessons/` (ví dụ: `bai4.json`).
+   - Cập nhật danh sách bài học vào `courses.json`.
+2. **Cập nhật lên hệ thống:**
+   - Đẩy thay đổi lên nhánh `main` của kho lưu trữ GitHub, hệ thống GitHub Pages sẽ tự động cập nhật phiên bản mới nhất.
