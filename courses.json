@@ -17,10 +17,17 @@
     "status": "active",
     "lessons": [
       {
+        "id": "bai2-phan1",
+        "title": "Buổi 2 - Hành Trình Bí Ngô (Phần 1)",
+        "subtitle": "Chuyển Màn Broadcast, Di Chuyển WASD & Mưa Bản Sao",
+        "duration": 60,
+        "tasksCount": 3
+      },
+      {
         "id": "bai3-phan2",
         "title": "Buổi 3 - Hành Trình Bí Ngô (Phần 2)",
         "subtitle": "Bắn Đạn Chuột, Va Chạm Quái & Trừ Máu (HP)",
-        "duration": 45,
+        "duration": 60,
         "tasksCount": 3
       }
     ]

@@ -1,0 +1,111 @@
+{
+  "id": "bai2-phan1",
+  "title": "Buổi 2 - Hành Trình Bí Ngô (Phần 1)",
+  "subtitle": "Chuyển Màn Broadcast, Di Chuyển WASD & Mưa Bản Sao (Clone)",
+  "course": "Scratch Nâng Cao (Game Master)",
+  "duration": 60,
+  "scratchUrl": "https://scratchfoundation.github.io/scratch-gui/",
+  "templateUrl": "projects/bai3-template.sb3",
+  "tasks": [
+    {
+      "id": "task1",
+      "title": "Nhiệm vụ 1: Chuyển Màn Hình Bằng Broadcast",
+      "icon": "📢",
+      "description": "Lập trình các nút bấm (Play, Guide, Setting) khi click sẽ phát tin nhắn tương ứng và ẩn đi. Nhân vật Farmer nhận tin 'Play' thì hiện ra, nút Undo phát tin 'Menu' để quay về màn chính.",
+      "hint": {
+        "concept": "Tư duy logic: Sử dụng cơ chế Phát / Nhận tin nhắn (Broadcast & Receive) để điều phối các màn hình (Menu, Play, Guide, Setting).",
+        "keywords": ["Khi bấm vào nhân vật: when this sprite clicked", "Phát tin nhắn: broadcast [Play/Menu]", "Khi nhận tin nhắn: when I receive [Play/Menu]", "Ẩn / Hiện nhân vật: hide / show"],
+        "creativeIdea": "💡 Ý tưởng sáng tạo: Em có thể thêm hiệu ứng lướt mờ (fade out) hoặc phát âm thanh mở màn khi bấm nút Play!"
+      },
+      "codeRules": {
+        "requiredOpcodes": ["event_broadcast", "event_whenbroadcastreceived", "looks_hide", "looks_show"],
+        "requiredKeywords": ["broadcast", "play", "hide", "show"],
+        "missingFeedback": "Chưa tìm thấy khối lệnh phát tin nhắn 'broadcast' hoặc khối lệnh nhận tin 'when I receive' để chuyển màn hình!",
+        "successFeedback": "Đã phát hiện đầy đủ cơ chế phát và nhận tin nhắn chuyển màn hình!"
+      },
+      "verification": {
+        "question": "Khi bấm nút Play trên màn hình Menu, điều gì xảy ra?",
+        "options": [
+          "Nút Play ẩn đi và nhân vật chính Farmer xuất hiện trên màn hình chơi",
+          "Màn hình đứng yên không có phản hồi gì",
+          "Em đã sáng tạo thêm âm thanh / hiệu ứng chuyển cảnh độc đáo"
+        ],
+        "validIndices": [0, 2]
+      }
+    },
+    {
+      "id": "task2",
+      "title": "Nhiệm vụ 2: Điều Khiển Farmer Bằng Phím WASD",
+      "icon": "🕹️",
+      "description": "Lập trình cho Farmer nhận tin 'Play' và di chuyển 4 hướng mượt mà: W (lên), S (xuống), A (trái), D (phải) tương ứng thay đổi tọa độ X và Y.",
+      "hint": {
+        "concept": "Tư duy logic: Tọa độ X đại diện chiều ngang (A giảm X, D tăng X). Tọa độ Y đại diện chiều dọc (W tăng Y, S giảm Y). Đặt trong vòng lặp liên tục forever.",
+        "keywords": ["Vòng lặp liên tục: forever", "Kiểm tra phím nhấn: key [w/s/a/d] pressed?", "Thay đổi tọa độ X: change x by (5 / -5)", "Thay đổi tọa độ Y: change y by (5 / -5)"],
+        "creativeIdea": "💡 Ý tưởng sáng tạo: Em có thể đổi trang phục (next costume) khi bước đi hoặc thêm nút tăng tốc độ chạy (Shift / Space)!"
+      },
+      "codeRules": {
+        "requiredOpcodes": ["motion_changexby", "motion_changeyby", "sensing_keypressed"],
+        "requiredKeywords": ["change x", "change y", "key"],
+        "missingFeedback": "Chưa tìm thấy khối lệnh di chuyển thay đổi tọa độ 'change x by' hoặc 'change y by' kết hợp kiểm tra phím bấm!",
+        "successFeedback": "Đã phát hiện đầy đủ bộ lệnh di chuyển WASD điều khiển nhân vật theo trục tọa độ X-Y!"
+      },
+      "verification": {
+        "question": "Khi nhấn các phím W, A, S, D thì Farmer chuyển động ra sao?",
+        "options": [
+          "Farmer di chuyển 4 hướng mượt mà theo đúng phím nhấn (W lên, S xuống, A trái, D phải)",
+          "Farmer đứng yên hoặc bị trôi lệch hướng",
+          "Em đã kết hợp thêm phím mũi tên hoặc trang phục bước đi sinh động"
+        ],
+        "validIndices": [0, 2]
+      }
+    },
+    {
+      "id": "task3",
+      "title": "Nhiệm vụ 3: Mưa Bản Sao Bí Ngô & Kẻ Địch Ngẫu Nhiên",
+      "icon": "🎃",
+      "description": "Lập trình cho Bí ngô (Pumpkin) hoặc Quái vật (Enemy) tự động tạo bản sao (Clone) sau mỗi 1-3 giây và xuất hiện tại tọa độ X-Y ngẫu nhiên trên sân khấu.",
+      "hint": {
+        "concept": "Tư duy logic: Nhân vật gốc ẩn đi, dùng vòng lặp tạo bản sao định kỳ kết hợp pick random. Khi bản sao sinh ra, di chuyển tới vị trí ngẫu nhiên rồi mới hiện.",
+        "keywords": ["Tạo bản sao: create clone of myself", "Khi là bản sao: when I start as a clone", "Chờ ngẫu nhiên: wait (pick random 1 to 3) secs", "Tọa độ ngẫu nhiên: go to x: pick random (-200 to 200) y: pick random (-140 to 140)"],
+        "creativeIdea": "💡 Ý tưởng sáng tạo: Em có thể cho bản sao xuất hiện kèm kích thước ngẫu nhiên (random size) hoặc hiệu ứng rơi từ trên trời xuống!"
+      },
+      "codeRules": {
+        "requiredOpcodes": ["control_create_clone_of", "control_start_as_clone", "operator_random"],
+        "requiredKeywords": ["clone", "random"],
+        "missingFeedback": "Chưa tìm thấy khối lệnh tạo bản sao 'create clone of myself' hoặc khối lấy số ngẫu nhiên 'pick random'!",
+        "successFeedback": "Đã phát hiện đầy đủ cơ chế nhân bản (Clone) và xuất hiện tại vị trí ngẫu nhiên!"
+      },
+      "verification": {
+        "question": "Sau khi bắt đầu chơi, Bí ngô và Quái vật xuất hiện như thế nào?",
+        "options": [
+          "Xuất hiện liên tục tại các vị trí ngẫu nhiên khác nhau trên màn chơi sau khoảng 1-3 giây",
+          "Chỉ có đúng 1 nhân vật đứng yên một chỗ",
+          "Em đã sáng tạo thêm hiệu ứng rơi, đổi màu hoặc kích thước ngẫu nhiên"
+        ],
+        "validIndices": [0, 2]
+      }
+    }
+  ],
+  "knowledge": [
+    {
+      "icon": "📢",
+      "title": "1. Cơ chế Phát & Nhận Tin Nhắn (Broadcast)",
+      "desc": "Lệnh `phát tin [Play]` kết hợp `khi nhận [Play]` dùng để đồng bộ và chuyển đổi các màn hình (Menu, Play, Guide, Setting, Game Over) trong game."
+    },
+    {
+      "icon": "🕹️",
+      "title": "2. Hệ Tọa Độ X-Y & Phím WASD",
+      "desc": "Trục X là chiều ngang (A: -X sang trái, D: +X sang phải). Trục Y là chiều dọc (W: +Y lên trên, S: -Y xuống dưới)."
+    },
+    {
+      "icon": "✨",
+      "title": "3. Cơ Chế Bản Sao (Clone) & Lấy Ngẫu Nhiên",
+      "desc": "Dùng `tạo bản sao của chính tôi` và `lấy ngẫu nhiên từ... đến...` để tạo mưa vật phẩm, quái vật xuất hiện bất ngờ không trùng lặp."
+    },
+    {
+      "icon": "🔙",
+      "title": "4. Nút Quay Lại (Undo / Back to Menu)",
+      "desc": "Khi nhấn nút Undo, phát tin nhắn quay về màn hình Menu chính để người chơi xem lại Hướng dẫn (Guide) hoặc Cài đặt (Setting)."
+    }
+  ]
+}
