@@ -268,7 +268,7 @@
           let bodyContent = '';
           if (course.lessons && course.lessons.length > 0) {
             const lessonsHtml = course.lessons.map(lesson => `
-              <a href="index.html?lesson=${lesson.id}" class="lesson-card active-lesson">
+              <a href="lesson.html?lesson=${lesson.id}" class="lesson-card active-lesson">
                 <div>
                   <div class="lesson-title">${lesson.title}</div>
                   <div class="lesson-sub">${lesson.subtitle}</div>

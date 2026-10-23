@@ -30,7 +30,7 @@ const DEFAULT_FALLBACK_LESSON = {
   "subtitle": "Bắn Đạn, Va Chạm & Hiệu Ứng",
   "course": "MindX Scratch Creator",
   "duration": 60,
-  "scratchUrl": "https://turbowarp.org/editor",
+  "scratchUrl": "https://scratchfoundation.github.io/scratch-gui/",
   "tasks": [
     {
       "id": "task1",
@@ -238,13 +238,8 @@ function renderDashboard(lesson) {
   if (titleEl) titleEl.textContent = lesson.title;
   if (badgeEl) badgeEl.textContent = lesson.course || 'MindX Scratch';
   if (iframe && lesson.scratchUrl) {
-    let finalScratchUrl = lesson.scratchUrl;
-    // Tự động chuyển link project_url theo tên miền thực tế khi deploy
-    if (lesson.templateUrl) {
-      const absoluteTemplateUrl = new URL(lesson.templateUrl, window.location.href).href;
-      finalScratchUrl = `https://turbowarp.org/editor?project_url=${encodeURIComponent(absoluteTemplateUrl)}`;
-    }
-    iframe.src = finalScratchUrl;
+    // Sử dụng Scratch GUI sạch không bị lỗi embed
+    iframe.src = lesson.scratchUrl;
     iframe.onload = () => hideLoading();
     setTimeout(hideLoading, 2500);
   }

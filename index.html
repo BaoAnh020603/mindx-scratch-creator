@@ -1,253 +1,317 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Dashboard học tập &amp; dạy bù Scratch thân thiện dành cho học sinh MindX — làm bài trực tiếp trên Scratch, theo dõi nhiệm vụ và ôn tập kiến thức." />
-  <title>Góc Tự Học &amp; Dạy Bù — MindX Scratch</title>
+  <meta name="description"
+    content="Cổng học tập &amp; chọn bài học bù MindX Scratch dành cho học viên — chọn khóa học và bắt đầu luyện tập." />
+  <title>Cổng Luyện Tập &amp; Học Bù — MindX Scratch</title>
   <link rel="stylesheet" href="style.css" />
-  <!-- Thư viện giải nén và phân tích cấu trúc file Scratch (.sb3) -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <style>
+    body {
+      overflow-y: auto;
+      background: var(--bg-app);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .portal-container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 30px 20px 60px 20px;
+      width: 100%;
+    }
+
+    .portal-hero {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .portal-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #FFF1EE;
+      color: #FF4757;
+      border: 1px solid rgba(255, 71, 87, 0.25);
+      padding: 4px 14px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    body.dark-mode .portal-badge {
+      background: rgba(255, 71, 87, 0.15);
+      color: #FFA4B0;
+    }
+
+    .portal-hero h1 {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .portal-hero p {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .course-section {
+      background: var(--bg-sidebar);
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .course-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1.5px solid var(--border-color);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .course-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .course-icon {
+      font-size: 32px;
+    }
+
+    .course-name {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .course-desc {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .lessons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .lesson-card {
+      background: var(--bg-card-subtle);
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-decoration: none;
+      color: inherit;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .lesson-card:hover {
+      border-color: var(--scratch-blue);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      background: #EFF6FF;
+    }
+
+    body.dark-mode .lesson-card:hover {
+      background: #1E293B;
+      border-color: #3B82F6;
+    }
+
+    .lesson-card.active-lesson {
+      border-color: var(--scratch-orange);
+      background: #FFFBEB;
+    }
+
+    body.dark-mode .lesson-card.active-lesson {
+      background: rgba(255, 171, 25, 0.1);
+      border-color: rgba(255, 171, 25, 0.3);
+    }
+
+    .lesson-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .lesson-sub {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      line-height: 1.35;
+    }
+
+    .lesson-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .lesson-meta {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-enter-lesson {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--scratch-blue);
+      color: #FFFFFF;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 20px;
+      transition: var(--transition);
+    }
+
+    .lesson-card:hover .btn-enter-lesson {
+      background: #1D4ED8;
+    }
+  </style>
 </head>
+
 <body>
 
-  <!-- ════════════════════════════════════════════════════════
-       1. THANH HEADER THÂN THIỆN
-  ════════════════════════════════════════════════════════ -->
+  <!-- HEADER -->
   <header id="header">
     <div class="header-brand">
-      <div class="brand-icon-wrap" title="MindX Scratch Creator">🐱</div>
+      <div class="brand-icon-wrap" title="MindX Scratch">🐱</div>
       <div class="header-titles">
-        <div id="header-title">
-          <span id="title-text">Bài 3 - Hành Trình Bí Ngô (Phần 2)</span>
-          <span class="lesson-badge" id="header-badge">MindX Scratch</span>
-        </div>
-        <div id="header-sub">Góc Luyện Tập &amp; Sáng Tạo Trực Quan</div>
+        <div id="header-title">MindX Coding Hub</div>
+        <div id="header-sub">Hệ Thống Luyện Tập &amp; Học Bù Thông Minh</div>
       </div>
     </div>
 
     <div class="header-actions">
-      <!-- Nút đổi bài học / đổi khóa học -->
-      <a href="portal.html" class="btn-icon-pill" title="Quay lại trang danh sách khóa học">
-        📚 <span>Đổi bài học</span>
-      </a>
-
-      <!-- Nút đổi chế độ sáng/tối -->
-      <button class="btn-icon-pill" id="btn-theme-toggle" title="Đổi màu giao diện sáng / dịu mắt">
+      <button class="btn-icon-pill" id="btn-theme-toggle" title="Đổi giao diện">
         <span id="theme-icon">🌙</span> <span id="theme-text">Chế độ tối</span>
-      </button>
-
-      <!-- Nút làm lại bài từ đầu nếu muốn -->
-      <button class="btn-icon-pill" id="btn-reset-progress" title="Xóa tiến độ và làm lại từ đầu">
-        🔄 <span>Làm lại</span>
       </button>
     </div>
   </header>
 
-  <!-- ════════════════════════════════════════════════════════
-       2. KHUNG LÀM VIỆC CHÍNH (2 CỘT)
-  ════════════════════════════════════════════════════════ -->
-  <div id="main">
+  <!-- BODY CONTENT -->
+  <div class="portal-container">
+    <div class="portal-hero">
+      <div class="portal-badge">🎓 DÀNH CHO HỌC VIÊN TỰ HỌC &amp; DẠY BÙ</div>
+      <h1>Chọn Khóa Học &amp; Bài Học Của Em</h1>
+      <p>Em đang học khóa nào hoặc cần dạy bù bài nào? Hãy nhấp vào bài học bên dưới để mở giao diện làm bài trực tiếp
+        nhé!</p>
+    </div>
 
-    <!-- ── CỘT TRÁI (65%): Màn hình Scratch ────────────────── -->
-    <section id="workspace" aria-label="Màn hình lập trình Scratch">
-      <!-- Loading khi đang mở Scratch -->
-      <div id="loading-overlay">
-        <div class="scratch-loader-cat">🐱</div>
-        <div class="loading-text">Đang tải trình soạn thảo Scratch...</div>
-        <div style="font-size:12px;color:#94A3B8;">Em chờ một chút nhé!</div>
-      </div>
-
-      <div class="workspace-banner">
-        <span>💻 KHU VỰC THỰC HÀNH LẬP TRÌNH SCRATCH</span>
-        <div style="display:flex;align-items:center;gap:10px;">
-          <!-- Nút Tải sẵn bộ nhân vật bài học -->
-          <a href="projects/bai3-template.sb3" download="Bai_Tap_Cho_Buoi_Hoc_So_2.sb3" class="btn-open-external" style="background:#2ED573;border-color:#26AF5F;color:#fff;font-weight:700;" title="Bấm để tải nhanh file mẫu có sẵn đầy đủ nhân vật &amp; phông nền">
-            📥 Tải sẵn nhân vật mẫu (.sb3)
-          </a>
-          <a href="https://scratch.mit.edu/projects/editor" target="_blank" rel="noopener noreferrer" class="btn-open-external" title="Mở Scratch MIT chính thức ở tab mới nếu muốn đăng nhập tài khoản">
-            ↗ Mở Scratch MIT (tab mới)
-          </a>
-          <div class="tag-live">
-            <div class="dot"></div> Đang hoạt động
-          </div>
-        </div>
-      </div>
-
-      <iframe
-        id="scratch-frame"
-        src="https://turbowarp.org/editor"
-        allowfullscreen
-        allow="fullscreen; microphone; camera; geolocation; clipboard-read; clipboard-write"
-        title="Trình chỉnh sửa mã nguồn Scratch"
-      ></iframe>
-    </section>
-
-    <!-- ── CỘT PHẢI (35%): Hướng dẫn & Nhiệm vụ ────────────── -->
-    <aside id="sidebar" aria-label="Bảng hướng dẫn bài học">
-      <div id="sidebar-scroll">
-
-        <!-- BANNER THIẾT LẬP THỜI GIAN & BẮT ĐẦU: HỌC VIÊN TỰ CHỌN THỜI GIAN LÀM BÀI -->
-        <div class="ready-banner-card" id="ready-banner">
-          <div class="ready-header">
-            <span style="font-size:24px;">⏱️</span>
-            <div>
-              <div class="ready-title">Thiết lập thời gian làm bài</div>
-              <div class="ready-desc">Em hãy tự chọn thời gian muốn luyện tập hôm nay:</div>
-            </div>
-          </div>
-
-          <!-- Bộ chọn thời gian luyện tập (Học viên tự bấm chọn) -->
-          <div class="time-select-grid" id="time-select-grid">
-            <button type="button" class="btn-time-opt" data-mins="30">30 phút</button>
-            <button type="button" class="btn-time-opt" data-mins="45">45 phút</button>
-            <button type="button" class="btn-time-opt" data-mins="60">60 phút</button>
-            <button type="button" class="btn-time-opt" data-mins="90">90 phút</button>
-          </div>
-
-          <!-- Nút kích hoạt bắt đầu tính giờ (Sau khi bấm là KHÓA không cho đổi) -->
-          <button class="btn-start-session" id="btn-start-session" disabled style="opacity:0.6;cursor:not-allowed;">
-            👈 Vui lòng chọn số phút bên trên để bắt đầu
-          </button>
-        </div>
-
-        <!-- THẺ HƯỚNG DẪN 3 BƯỚC CHO HỌC SINH -->
-        <div class="student-guide-card">
-          <div class="guide-header">
-            <span>📢</span> CÁCH LÀM BÀI DÀNH CHO HỌC VIÊN:
-          </div>
-          <ul class="guide-steps">
-            <li>
-              <span class="step-num">1</span>
-              <span>Lập trình trên Scratch (có thể <b>làm theo yêu cầu</b> hoặc <b>tự do sáng tạo</b>).</span>
-            </li>
-            <li>
-              <span class="step-num">2</span>
-              <span>Bấm xem <b>Gợi ý &amp; Hướng tư duy</b> nếu cần trợ giúp khối lệnh.</span>
-            </li>
-            <li>
-              <span class="step-num">3</span>
-              <span>Làm xong bấm <b>Kiểm tra hoàn thành</b> để hệ thống xác nhận và tích xanh!</span>
-            </li>
-          </ul>
-        </div>
-
-        <!-- ĐỒNG HỒ ĐẾM NGƯỢC THỜI GIAN -->
-        <div class="timer-container">
-          <div class="timer-box" id="timer-box">
-            <div class="timer-icon-badge" id="timer-icon">⏳</div>
-            <div class="timer-content">
-              <div class="timer-label" id="timer-status-text">Chưa chọn thời gian</div>
-              <div class="timer-number" id="timer-display">00:00</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- THANH TIẾN ĐỘ HOÀN THÀNH (GAMIFIED) -->
-        <div class="progress-card">
-          <div class="progress-header">
-            <span class="progress-title-text">🎯 Tiến độ của em</span>
-            <span class="progress-status-badge" id="progress-pct">0% (0/3 task)</span>
-          </div>
-          <div class="progress-track">
-            <div class="progress-fill" id="progress-fill"></div>
-          </div>
-          <div class="progress-message" id="progress-msg">Bấm "Bắt đầu làm bài" để khởi động nhé! 🚀</div>
-        </div>
-
-        <!-- DANH SÁCH NHIỆM VỤ CẦN LÀM -->
-        <div class="section-heading">
-          <h2>🎯 Danh sách nhiệm vụ</h2>
-          <span class="section-subnote">Kiểm tra để tích hoàn thành</span>
-        </div>
-
-        <div id="tasks-container">
-          <!-- Được script.js tạo tự động từ file bài học -->
-        </div>
-
-        <!-- NÚT NỘP BÀI -->
-        <button class="btn-submit-lesson" id="btn-finish">
-          🎉 NỘP BÀI &amp; XEM KIẾN THỨC CỐT LÕI
-        </button>
-
-        <!-- BẢNG TỔNG KẾT KIẾN THỨC BẢO BỐI -->
-        <div id="review-section">
-          <div class="review-title-bar">
-            <span style="font-size:20px;">🧠</span>
-            <h3>BẢO BỐI KIẾN THỨC CẦN GHI NHỚ:</h3>
-          </div>
-          <div class="knowledge-grid" id="knowledge-container">
-            <!-- Được script.js tạo tự động -->
-          </div>
-        </div>
-
-      </div><!-- /sidebar-scroll -->
-    </aside>
-
-  </div><!-- /main -->
-
-  <!-- ════════════════════════════════════════════════════════
-       3. MODAL KIỂM TRA TRỰC TIẾP TRÊN GIAO DIỆN PHẦN MỀM SCRATCH
-  ════════════════════════════════════════════════════════ -->
-  <div class="verify-modal-overlay" id="verify-modal" style="display:none;">
-    <div class="verify-modal-card">
-      <div class="verify-modal-header">
-        <span style="font-size:26px;" id="modal-task-icon">🤖</span>
-        <div>
-          <div class="verify-modal-title" id="modal-task-title">Kiểm Tra Trực Tiếp Trên Màn Hình Scratch</div>
-          <div class="verify-modal-subtitle">Hệ thống phân tích khối lệnh em đang lập trình bên trái</div>
-        </div>
-      </div>
-
-      <!-- Hướng dẫn lưu file từ Scratch bên trái -->
-      <div class="sb3-guide-banner">
-        <span style="font-size:18px;">💡</span>
-        <span>Từ màn hình Scratch bên trái: Vào menu <b>File (Tập tin)</b> ➔ Chọn <b>Save to your computer (Lưu về máy tính)</b> rồi tải file <code>.sb3</code> (hoặc <code>.pmp</code>) vào bên dưới để hệ thống quét tự động:</span>
-      </div>
-
-      <!-- VÙNG KÉO THẢ / CHỌN FILE .SB3 / .PMP -->
-      <div class="sb3-dropzone" id="sb3-dropzone">
-        <input type="file" id="sb3-file-input" accept=".sb3,.pmp,.zip" style="display:none;" />
-        <div class="dropzone-icon" id="dropzone-icon">📥</div>
-        <div class="dropzone-title" id="dropzone-title">Kéo thả file .sb3 hoặc .pmp vào đây hoặc <span class="browse-link">Chọn file từ máy</span></div>
-        <div class="dropzone-sub" id="dropzone-sub">Hệ thống sẽ giải mã phân tích toàn bộ khối lệnh Scratch của em trong 0.2s</div>
-      </div>
-
-      <!-- KẾT QUẢ QUÉT TỰ ĐỘNG -->
-      <div class="scan-result-container" id="scan-result-container" style="display:none;">
-        <div class="scan-eval-box" id="scan-eval-box">
-          <!-- Sẽ được script.js điền nội dung kết quả quét -->
-        </div>
-
-        <!-- Hình thức hoàn thành (Hiện khi quét hợp lệ) -->
-        <div class="verify-mode-choice" id="verify-mode-choice" style="display:none;">
-          <div style="font-size:12px;font-weight:800;color:#15803D;margin-bottom:6px;">
-            ✅ XÁC NHẬN HỢP LỆ! CHỌN HÌNH THỨC HOÀN THÀNH:
-          </div>
-          <label class="mode-radio-label">
-            <input type="radio" name="task-approach" value="standard" checked />
-            <span>🎯 Em làm đúng theo yêu cầu chuẩn của bài</span>
-          </label>
-          <label class="mode-radio-label">
-            <input type="radio" name="task-approach" value="creative" />
-            <span>✨ Em đã hoàn thành và tự do sáng tạo thêm tính năng / hiệu ứng mới</span>
-          </label>
-        </div>
-      </div>
-
-      <div class="verify-modal-actions" id="scan-modal-actions">
-        <button class="btn-modal-cancel" id="btn-modal-cancel" type="button">Đóng</button>
-        <button class="btn-modal-confirm" id="btn-modal-confirm" type="button" disabled>✔ Xác nhận &amp; Tích hoàn thành</button>
-      </div>
+    <div id="courses-container">
+      <!-- Injected by script -->
     </div>
   </div>
 
-  <!-- ════════════════════════════════════════════════════════
-       4. HIỆU ỨNG PHÁO HOA & THÔNG BÁO TOAST
-  ════════════════════════════════════════════════════════ -->
-  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
-  <div id="toast" role="alert" aria-live="polite"></div>
+  <script>
+    // Theme toggle
+    const btnThemeToggle = document.getElementById('btn-theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const themeText = document.getElementById('theme-text');
 
-  <script src="script.js"></script>
+    function initTheme() {
+      const saved = localStorage.getItem('mindx_theme') || 'light';
+      if (saved === 'dark') {
+        document.body.classList.add('dark-mode');
+        themeIcon.textContent = '☀️';
+        themeText.textContent = 'Chế độ sáng';
+      }
+    }
+
+    btnThemeToggle.addEventListener('click', () => {
+      const isDark = document.body.classList.toggle('dark-mode');
+      localStorage.setItem('mindx_theme', isDark ? 'dark' : 'light');
+      themeIcon.textContent = isDark ? '☀️' : '🌙';
+      themeText.textContent = isDark ? 'Chế độ sáng' : 'Chế độ tối';
+    });
+    initTheme();
+
+    // Render courses
+    async function loadCourses() {
+      try {
+        const res = await fetch('courses.json');
+        const courses = await res.json();
+        const container = document.getElementById('courses-container');
+        container.innerHTML = '';
+
+        courses.forEach(course => {
+          const section = document.createElement('div');
+          section.className = 'course-section';
+
+          let bodyContent = '';
+          if (course.lessons && course.lessons.length > 0) {
+            const lessonsHtml = course.lessons.map(lesson => `
+              <a href="lesson.html?lesson=${lesson.id}" class="lesson-card active-lesson">
+                <div>
+                  <div class="lesson-title">${lesson.title}</div>
+                  <div class="lesson-sub">${lesson.subtitle}</div>
+                </div>
+                <div class="lesson-footer">
+                  <div class="lesson-meta">
+                    <span>⏱️ Tự chọn thời gian</span>
+                    <span>🎯 ${lesson.tasksCount} task</span>
+                  </div>
+                  <div class="btn-enter-lesson">Vào học ngay ➜</div>
+                </div>
+              </a>
+            `).join('');
+            bodyContent = `<div class="lessons-grid">${lessonsHtml}</div>`;
+          } else {
+            bodyContent = `
+              <div style="background:var(--bg-card-subtle);border:1.5px dashed var(--border-color);border-radius:var(--radius-md);padding:20px;text-align:center;color:var(--text-muted);font-size:13px;font-weight:700;">
+                ⏳ Khóa học này đang được chuẩn bị giáo trình và sẽ mở khi thầy cập nhật bài học mới nhé!
+              </div>
+            `;
+          }
+
+          section.innerHTML = `
+            <div class="course-header">
+              <div class="course-title-wrap">
+                <div class="course-icon">${course.icon}</div>
+                <div>
+                  <div class="course-name">${course.name}</div>
+                  <div class="course-desc">${course.description}</div>
+                </div>
+              </div>
+              <span class="lesson-badge" style="${course.status === 'active' ? 'background:#DCFCE7;color:#166534;border-color:#86EFAC;' : ''}">${course.badge}</span>
+            </div>
+            ${bodyContent}
+          `;
+          container.appendChild(section);
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    loadCourses();
+  </script>
 </body>
+
 </html>
