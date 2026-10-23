@@ -1,0 +1,37 @@
+[
+  {
+    "id": "scratch-basic",
+    "name": "Khóa Học: Scratch Basic (Cơ Bản)",
+    "description": "Làm quen với tư duy thuật toán, chuyển động, sự kiện và biến số cơ bản.",
+    "icon": "🌱",
+    "badge": "Cơ bản",
+    "status": "upcoming",
+    "lessons": []
+  },
+  {
+    "id": "scratch-advanced",
+    "name": "Khóa Học: Scratch Advanced (Nâng Cao)",
+    "description": "Lập trình game nâng cao, bản sao (clone), hệ thống va chạm, đạn và quản lý Máu/Điểm.",
+    "icon": "🎮",
+    "badge": "Đang diễn ra",
+    "status": "active",
+    "lessons": [
+      {
+        "id": "bai3-phan2",
+        "title": "Buổi 3 - Hành Trình Bí Ngô (Phần 2)",
+        "subtitle": "Bắn Đạn Chuột, Va Chạm Quái & Trừ Máu (HP)",
+        "duration": 45,
+        "tasksCount": 3
+      }
+    ]
+  },
+  {
+    "id": "scratch-intensive",
+    "name": "Khóa Học: Scratch Intensive (Chuyên Sâu)",
+    "description": "Vật lý nhảy platformer trọng lực, lưu trữ dữ liệu đám mây (Cloud) và dự án cuối khóa.",
+    "icon": "⚡",
+    "badge": "Chuyên sâu",
+    "status": "upcoming",
+    "lessons": []
+  }
+]

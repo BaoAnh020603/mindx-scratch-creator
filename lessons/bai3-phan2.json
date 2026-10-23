@@ -1,0 +1,111 @@
+{
+  "id": "bai3-phan2",
+  "title": "Buổi 3 - Hành Trình Bí Ngô (Phần 2)",
+  "subtitle": "Bắn Đạn Chuột, Va Chạm Quái & Trừ Máu (HP)",
+  "course": "Scratch Nâng Cao (Game Master)",
+  "duration": 60,
+  "scratchUrl": "https://turbowarp.org/editor?project_url=http://localhost:5500/projects/bai3-template.sb3",
+  "templateUrl": "projects/bai3-template.sb3",
+  "tasks": [
+    {
+      "id": "task1",
+      "title": "Nhiệm vụ 1: Hiệu ứng Hover Nút Bấm",
+      "icon": "🖱️",
+      "description": "Lập trình nút bấm tự động phóng to khi rê chuột vào (set size) và thu về kích thước ban đầu khi rê chuột ra ngoài.",
+      "hint": {
+        "concept": "Tư duy logic: Cần kiểm tra liên tục xem con trỏ chuột có đang chạm vào nút hay không để đổi kích thước (size).",
+        "keywords": ["Vòng lặp forever (liên tục)", "Khối điều khiển if...else (nếu...ngược lại)", "Khối cảm biến touching mouse-pointer? (đang chạm con trỏ chuột)", "Khối hiển thị set size to...% (đặt kích thước)"],
+        "creativeIdea": "💡 Ý tưởng sáng tạo: Thay vì chỉ đổi kích thước, em có thể thử đổi hiệu ứng màu (change color effect) hoặc phát âm thanh nhẹ (play sound pop) khi hover!"
+      },
+      "codeRules": {
+        "requiredOpcodes": ["sensing_touchingobject", "looks_size", "looks_setsizeto"],
+        "requiredKeywords": ["mouse-pointer", "size", "touching"],
+        "missingFeedback": "Chưa tìm thấy khối lệnh cảm biến 'touching [mouse-pointer]?' hoặc lệnh thay đổi kích thước nút 'set size' trong project!",
+        "successFeedback": "Đã phát hiện đầy đủ khối lệnh cảm ứng con trỏ chuột và đổi kích thước!"
+      },
+      "verification": {
+        "question": "Khi kiểm tra nút bấm trên màn hình Scratch, điều gì đã xảy ra?",
+        "options": [
+          "Nút tự động phóng to khi di chuột vào và thu nhỏ lại khi rê chuột ra ngoài",
+          "Nút chỉ đứng yên không có phản hồi gì",
+          "Em đã sáng tạo thêm hiệu ứng khác (đổi màu / đổi trang phục / âm thanh)"
+        ],
+        "validIndices": [0, 2]
+      }
+    },
+    {
+      "id": "task2",
+      "title": "Nhiệm vụ 2: Bắn đạn Water theo vị trí chuột",
+      "icon": "💧",
+      "description": "Mỗi khi bấm phím Space, Farmer sẽ bắn đạn nước (sử dụng Clone) bay thẳng về phía con trỏ chuột.",
+      "hint": {
+        "concept": "Tư duy logic: Sử dụng cơ chế Bản sao (Clone) để tạo nhiều viên đạn bay độc lập.",
+        "keywords": ["Tạo bản sao: create clone of myself", "Khi là bản sao: when I start as a clone", "Xuất phát từ Farmer: go to Farmer", "Định hướng: point towards mouse-pointer", "Di chuyển liên tục cho tới khi chạm cạnh: repeat until touching edge -> move steps", "Xóa đạn: delete this clone"],
+        "creativeIdea": "💡 Ý tưởng sáng tạo: Em có thể tạo hiệu ứng đạn xoay tròn khi bay, hoặc thêm đạn đôi / đạn chùm nếu muốn trò chơi hấp dẫn hơn!"
+      },
+      "codeRules": {
+        "requiredOpcodes": ["control_create_clone_of", "control_start_as_clone", "motion_pointtowards"],
+        "requiredKeywords": ["clone", "mouse-pointer", "point towards"],
+        "missingFeedback": "Chưa tìm thấy cơ chế tạo bản sao đạn 'create clone of myself' hoặc lệnh định hướng 'point towards [mouse-pointer]'!",
+        "successFeedback": "Đã phát hiện đầy đủ cơ chế tạo bản sao đạn và định hướng bay theo chuột!"
+      },
+      "verification": {
+        "question": "Sau khi nhấn phím bắn, đạn nước hoạt động như thế nào?",
+        "options": [
+          "Đạn xuất phát từ Farmer, bay đúng hướng chuột và biến mất khi chạm viền",
+          "Đạn bị đứng yên ở góc màn hình",
+          "Em đã lập trình đạn sáng tạo theo cách riêng (đạn chùm / xoay / bắn nhanh)"
+        ],
+        "validIndices": [0, 2]
+      }
+    },
+    {
+      "id": "task3",
+      "title": "Nhiệm vụ 3: Xử lý Va Chạm, Điểm & Máu (HP)",
+      "icon": "💥",
+      "description": "Đạn chạm Quái thì Quái/Đạn biến mất và cộng Điểm (Score). Quái chạm Farmer thì trừ Máu (HP) và nhấp nháy bị thương.",
+      "hint": {
+        "concept": "Tư duy logic: Dùng khối cảm biến va chạm touching để kích hoạt thay đổi biến số và hiệu ứng.",
+        "keywords": ["Kiểm tra va chạm: touching [tên nhân vật]?", "Cộng điểm khi bắn trúng: change Score by 10", "Trừ máu khi bị đụng: change HP by -1", "Hiệu ứng bị thương: dùng repeat kết hợp hide và show với khoảng chờ ngắn", "Xóa bản sao đạn: delete this clone"],
+        "creativeIdea": "💡 Ý tưởng sáng tạo: Em có thể tạo hiệu ứng quái vật nổ tung thành nhiều mảnh, hoặc thêm âm thanh lúc nhận điểm / mất máu!"
+      },
+      "codeRules": {
+        "requiredOpcodes": ["sensing_touchingobject", "data_changevariableby"],
+        "requiredKeywords": ["touching", "score", "hp", "máu", "điểm"],
+        "missingFeedback": "Chưa tìm thấy khối lệnh kiểm tra va chạm 'touching' hoặc khối thay đổi biến số Máu/Điểm 'change [Score/HP] by'!",
+        "successFeedback": "Đã phát hiện đầy đủ khối lệnh kiểm tra va chạm và tính toán biến số Điểm / HP!"
+      },
+      "verification": {
+        "question": "Khi va chạm xảy ra trong trò chơi của em:",
+        "options": [
+          "Đạn trúng quái được cộng điểm và quái/đạn biến mất, Farmer chạm quái bị trừ HP kèm hiệu ứng",
+          "Các nhân vật đi xuyên qua nhau mà không có chuyện gì xảy ra",
+          "Em đã sáng tạo thêm cơ chế điểm combo / nổ hiệu ứng / hồi máu đặc biệt"
+        ],
+        "validIndices": [0, 2]
+      }
+    }
+  ],
+  "knowledge": [
+    {
+      "icon": "🖱️",
+      "title": "1. Hiệu ứng Hover Nút Bấm",
+      "desc": "Sử dụng khối cảm biến `đang chạm [con trỏ chuột]?` kết hợp với `đặt kích thước` để người chơi biết nút đang được chọn."
+    },
+    {
+      "icon": "💧",
+      "title": "2. Cơ chế Bắn Đạn (Clone)",
+      "desc": "Tạo đạn bằng `tạo bản sao của chính tôi`, cho đạn xuất phát từ nhân vật chính và `hướng về phía con trỏ chuột`."
+    },
+    {
+      "icon": "💥",
+      "title": "3. Xử lý Va Chạm & Tính Điểm",
+      "desc": "Dùng điều kiện `đang chạm [nhân vật]?` để kích hoạt sự kiện: xóa đạn, cộng điểm hoặc trừ biến Máu (HP)."
+    },
+    {
+      "icon": "✨",
+      "title": "4. Hiệu ứng Bị Thương (Nhấp nháy)",
+      "desc": "Dùng vòng lặp `lặp lại 3 lần` kết hợp xen kẽ `ẩn` và `hiện` kèm lệnh `đợi 0.15s` để làm nhân vật nhấp nháy chân thực."
+    }
+  ]
+}

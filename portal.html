@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="Cổng học tập &amp; chọn bài học bù MindX Scratch dành cho học viên — chọn khóa học và bắt đầu luyện tập." />
+  <title>Cổng Luyện Tập &amp; Học Bù — MindX Scratch</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      overflow-y: auto;
+      background: var(--bg-app);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .portal-container {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 30px 20px 60px 20px;
+      width: 100%;
+    }
+
+    .portal-hero {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .portal-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #FFF1EE;
+      color: #FF4757;
+      border: 1px solid rgba(255, 71, 87, 0.25);
+      padding: 4px 14px;
+      border-radius: 30px;
+      font-size: 13px;
+      font-weight: 800;
+      margin-bottom: 12px;
+    }
+
+    body.dark-mode .portal-badge {
+      background: rgba(255, 71, 87, 0.15);
+      color: #FFA4B0;
+    }
+
+    .portal-hero h1 {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--text-main);
+      margin-bottom: 8px;
+    }
+
+    .portal-hero p {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .course-section {
+      background: var(--bg-sidebar);
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      margin-bottom: 28px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .course-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1.5px solid var(--border-color);
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .course-title-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .course-icon {
+      font-size: 32px;
+    }
+
+    .course-name {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .course-desc {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .lessons-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+
+    .lesson-card {
+      background: var(--bg-card-subtle);
+      border: 2px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-decoration: none;
+      color: inherit;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .lesson-card:hover {
+      border-color: var(--scratch-blue);
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-md);
+      background: #EFF6FF;
+    }
+
+    body.dark-mode .lesson-card:hover {
+      background: #1E293B;
+      border-color: #3B82F6;
+    }
+
+    .lesson-card.active-lesson {
+      border-color: var(--scratch-orange);
+      background: #FFFBEB;
+    }
+
+    body.dark-mode .lesson-card.active-lesson {
+      background: rgba(255, 171, 25, 0.1);
+      border-color: rgba(255, 171, 25, 0.3);
+    }
+
+    .lesson-title {
+      font-size: 15px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    .lesson-sub {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+      line-height: 1.35;
+    }
+
+    .lesson-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 10px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .lesson-meta {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--text-muted);
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-enter-lesson {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: var(--scratch-blue);
+      color: #FFFFFF;
+      font-size: 12px;
+      font-weight: 800;
+      padding: 5px 12px;
+      border-radius: 20px;
+      transition: var(--transition);
+    }
+
+    .lesson-card:hover .btn-enter-lesson {
+      background: #1D4ED8;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header id="header">
+    <div class="header-brand">
+      <div class="brand-icon-wrap" title="MindX Scratch">🐱</div>
+      <div class="header-titles">
+        <div id="header-title">MindX Coding Hub</div>
+        <div id="header-sub">Hệ Thống Luyện Tập &amp; Học Bù Thông Minh</div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="btn-icon-pill" id="btn-theme-toggle" title="Đổi giao diện">
+        <span id="theme-icon">🌙</span> <span id="theme-text">Chế độ tối</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- BODY CONTENT -->
+  <div class="portal-container">
+    <div class="portal-hero">
+      <div class="portal-badge">🎓 DÀNH CHO HỌC VIÊN TỰ HỌC &amp; DẠY BÙ</div>
+      <h1>Chọn Khóa Học &amp; Bài Học Của Em</h1>
+      <p>Em đang học khóa nào hoặc cần dạy bù bài nào? Hãy nhấp vào bài học bên dưới để mở giao diện làm bài trực tiếp
+        nhé!</p>
+    </div>
+
+    <div id="courses-container">
+      <!-- Injected by script -->
+    </div>
+  </div>
+
+  <script>
+    // Theme toggle
+    const btnThemeToggle = document.getElementById('btn-theme-toggle');
+    const themeIcon = document.getElementById('theme-icon');
+    const themeText = document.getElementById('theme-text');
+
+    function initTheme() {
+      const saved = localStorage.getItem('mindx_theme') || 'light';
+      if (saved === 'dark') {
+        document.body.classList.add('dark-mode');
+        themeIcon.textContent = '☀️';
+        themeText.textContent = 'Chế độ sáng';
+      }
+    }
+
+    btnThemeToggle.addEventListener('click', () => {
+      const isDark = document.body.classList.toggle('dark-mode');
+      localStorage.setItem('mindx_theme', isDark ? 'dark' : 'light');
+      themeIcon.textContent = isDark ? '☀️' : '🌙';
+      themeText.textContent = isDark ? 'Chế độ sáng' : 'Chế độ tối';
+    });
+    initTheme();
+
+    // Render courses
+    async function loadCourses() {
+      try {
+        const res = await fetch('courses.json');
+        const courses = await res.json();
+        const container = document.getElementById('courses-container');
+        container.innerHTML = '';
+
+        courses.forEach(course => {
+          const section = document.createElement('div');
+          section.className = 'course-section';
+
+          let bodyContent = '';
+          if (course.lessons && course.lessons.length > 0) {
+            const lessonsHtml = course.lessons.map(lesson => `
+              <a href="index.html?lesson=${lesson.id}" class="lesson-card active-lesson">
+                <div>
+                  <div class="lesson-title">${lesson.title}</div>
+                  <div class="lesson-sub">${lesson.subtitle}</div>
+                </div>
+                <div class="lesson-footer">
+                  <div class="lesson-meta">
+                    <span>⏱️ Tự chọn thời gian</span>
+                    <span>🎯 ${lesson.tasksCount} task</span>
+                  </div>
+                  <div class="btn-enter-lesson">Vào học ngay ➜</div>
+                </div>
+              </a>
+            `).join('');
+            bodyContent = `<div class="lessons-grid">${lessonsHtml}</div>`;
+          } else {
+            bodyContent = `
+              <div style="background:var(--bg-card-subtle);border:1.5px dashed var(--border-color);border-radius:var(--radius-md);padding:20px;text-align:center;color:var(--text-muted);font-size:13px;font-weight:700;">
+                ⏳ Khóa học này đang được chuẩn bị giáo trình và sẽ mở khi thầy cập nhật bài học mới nhé!
+              </div>
+            `;
+          }
+
+          section.innerHTML = `
+            <div class="course-header">
+              <div class="course-title-wrap">
+                <div class="course-icon">${course.icon}</div>
+                <div>
+                  <div class="course-name">${course.name}</div>
+                  <div class="course-desc">${course.description}</div>
+                </div>
+              </div>
+              <span class="lesson-badge" style="${course.status === 'active' ? 'background:#DCFCE7;color:#166534;border-color:#86EFAC;' : ''}">${course.badge}</span>
+            </div>
+            ${bodyContent}
+          `;
+          container.appendChild(section);
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+    loadCourses();
+  </script>
+</body>
+
+</html>
