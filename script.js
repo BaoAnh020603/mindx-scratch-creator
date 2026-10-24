@@ -244,6 +244,13 @@ function renderDashboard(lesson) {
     setTimeout(hideLoading, 2500);
   }
 
+  // Cập nhật nút tải tài nguyên tương ứng với từng bài
+  const dlBtn = document.getElementById('btn-download-template');
+  if (dlBtn && lesson.templateUrl) {
+    dlBtn.href = lesson.templateUrl;
+    dlBtn.download = `${lesson.id}-nhan-vat-mau.sb3`;
+  }
+
   // Render danh sách nhiệm vụ
   const tasksContainer = document.getElementById('tasks-container');
   if (tasksContainer) {
