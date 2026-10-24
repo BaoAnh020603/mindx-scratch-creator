@@ -681,6 +681,23 @@ function updateProgress() {
       progressMsg.textContent = 'Đỉnh chóp! Bấm "Nộp bài" để nhận kết quả nhé! 🏆';
     }
   }
+
+  // Khóa nút nộp bài nếu chưa hoàn thành 100% nhiệm vụ
+  if (btnFinish && !isFinished) {
+    if (done >= total && total > 0) {
+      btnFinish.disabled = false;
+      btnFinish.style.opacity = '1';
+      btnFinish.style.cursor = 'pointer';
+      btnFinish.innerHTML = '🎉 NỘP BÀI &amp; XEM KIẾN THỨC CỐT LÕI';
+      btnFinish.title = 'Đã hoàn thành tất cả nhiệm vụ, em có thể nộp bài ngay!';
+    } else {
+      btnFinish.disabled = true;
+      btnFinish.style.opacity = '0.65';
+      btnFinish.style.cursor = 'not-allowed';
+      btnFinish.innerHTML = `🔒 HOÀN THÀNH ĐỦ NHIỆM VỤ ĐỂ NỘP BÀI (${done}/${total})`;
+      btnFinish.title = `Em cần hoàn thành đủ ${total} nhiệm vụ mới được phép nộp bài nhé! (Hiện tại: ${done}/${total})`;
+    }
+  }
 }
 
 let chosenDurationMinutes = null; // Chưa chọn phút nào khi vừa vào
@@ -833,7 +850,10 @@ function finishLesson() {
     return chk && chk.classList.contains('checked');
   }).length : 0;
 
-  if (done < total && !confirm(`Em mới hoàn thành ${done}/${total} nhiệm vụ. Em có chắc muốn nộp bài luôn không?`)) {
+  // Bắt buộc phải hoàn thành 100% nhiệm vụ mới cho nộp
+  if (done < total) {
+    showToast(`⚠️ Em mới hoàn thành ${done}/${total} nhiệm vụ! Hãy kiểm tra và hoàn thành đủ tất cả nhiệm vụ mới được nộp bài nhé!`, 'warning');
+    alert(`⚠️ Chưa thể nộp bài!\n\nEm mới hoàn thành ${done}/${total} nhiệm vụ.\nHãy hoàn thành và bấm "Kiểm tra hoàn thành" đủ tất cả các nhiệm vụ còn lại nhé!`);
     return;
   }
 
