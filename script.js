@@ -7,6 +7,7 @@
 
 /* ── Trạng thái ứng dụng ── */
 const STATE_KEY_PREFIX = 'mindx_dashboard_';
+const ACTIVE_LESSON_KEY = 'mindx_current_active_lesson';
 let lessonData   = null;
 let totalSeconds = 0;
 let timeLeft     = 0;
@@ -14,6 +15,8 @@ let timerInterval = null;
 let isStarted    = false;
 let isFinished   = false;
 let currentVerifyingTaskId = null;
+let tabSwitchCount = 0;
+let isFullscreenRequested = false;
 
 /* ── Tham chiếu DOM ── */
 let timerDisplay, timerBox, timerStatusText, timerIcon;
@@ -21,6 +24,8 @@ let progressFill, progressPct, progressMsg;
 let btnFinish, reviewSection, toastEl, confettiCanvas;
 let btnThemeToggle, btnReset, btnStartSession, readyBanner;
 let verifyModal, btnModalCancel, btnModalConfirm;
+let btnBackPortal, tabWarningOverlay, fullscreenOverlay;
+let btnResumeTab, btnReenterFullscreen, tabSwitchCountEl;
 
 
 /* ── Fallback Data Mặc Định (Chạy offline mượt mà kể cả khi mở file://) ── */
@@ -183,6 +188,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   btnModalCancel  = document.getElementById('btn-modal-cancel');
   btnModalConfirm = document.getElementById('btn-modal-confirm');
 
+  // Anti-cheat & Focus elements
+  btnBackPortal       = document.getElementById('btn-back-portal');
+  tabWarningOverlay   = document.getElementById('tab-warning-overlay');
+  fullscreenOverlay   = document.getElementById('fullscreen-request-overlay');
+  btnResumeTab        = document.getElementById('btn-resume-tab');
+  btnReenterFullscreen= document.getElementById('btn-reenter-fullscreen');
+  tabSwitchCountEl    = document.getElementById('tab-switch-count');
+
   // Sự kiện — dùng ?. để tránh crash khi phần tử null
   btnStartSession?.addEventListener('click', startSession);
   btnFinish?.addEventListener('click', finishLesson);
@@ -191,7 +204,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   btnModalCancel?.addEventListener('click', closeModal);
   btnModalConfirm?.addEventListener('click', confirmVerification);
 
+  btnResumeTab?.addEventListener('click', handleResumeFromTabWarning);
+  btnReenterFullscreen?.addEventListener('click', requestAppFullscreen);
+
+  // Khóa nút "Đổi bài học" nếu chưa hoàn thành bài hiện tại
+  btnBackPortal?.addEventListener('click', handleBackPortalClick);
+
   initTheme();
+  setupAntiCheatListeners();
 
   const lessonId = getLessonIdFromUrl() || 'bai3-phan2';
   await loadLesson(lessonId);
@@ -208,6 +228,20 @@ function getStateKey(lessonId) {
 
 /* ── Tải dữ liệu bài học ── */
 async function loadLesson(lessonId) {
+  // Kiểm tra khóa bài học: nếu đang làm dở bài khác thì không cho vào bài này
+  const activeLesson = localStorage.getItem(ACTIVE_LESSON_KEY);
+  if (activeLesson && activeLesson !== lessonId) {
+    const activeFinished = localStorage.getItem(`${getStateKey(activeLesson)}_finished`);
+    if (activeFinished !== 'true') {
+      alert(`⚠️ Em đang làm bài dở ở bài học khác (${activeLesson})!\nEm phải hoàn thành xong bài đó trước khi chuyển sang bài mới nhé.`);
+      window.location.replace(`lesson.html?lesson=${activeLesson}`);
+      return;
+    }
+  }
+
+  // Đánh dấu bài này là bài đang làm
+  localStorage.setItem(ACTIVE_LESSON_KEY, lessonId);
+
   try {
     const res = await fetch(`lessons/${lessonId}.json`);
     if (!res.ok) throw new Error('Không tìm thấy file bài học');
@@ -221,6 +255,7 @@ async function loadLesson(lessonId) {
     renderDashboard(lessonData);
     restoreState(lessonData.id);
     setupTimerInitial(lessonData.id, lessonData.duration * 60);
+    updateLessonLockStatus();
     hideLoading();
   } else {
     showToast('⚠️ Không thể tải nội dung bài học. Vui lòng thử lại!', 'warning');
@@ -739,6 +774,11 @@ function startSession() {
     runCountdown(lessonData.id);
   }
 
+  // Khi bắt đầu làm bài: yêu cầu Fullscreen ngay lập tức và khóa đổi bài
+  isFullscreenRequested = true;
+  requestAppFullscreen();
+  updateLessonLockStatus();
+
   showToast(`🚀 Đã bắt đầu tính giờ ${chosenDurationMinutes} phút! Chúc em làm bài thật tốt!`, 'success');
   updateProgress();
 }
@@ -803,6 +843,8 @@ function setupTimerInitial(lessonId, defaultDurationSec) {
     if (timerIcon) timerIcon.textContent = '⏱️';
     if (timerBox) timerBox.classList.add('running');
     runCountdown(lessonId);
+    isFullscreenRequested = true;
+    updateLessonLockStatus();
   } else {
     // Chưa bắt đầu: Mặc định hiển thị đúng 00:00 cho đến khi học sinh bấm chọn phút!
     timeLeft = 0;
@@ -858,6 +900,7 @@ function finishLesson() {
   }
 
   isFinished = true;
+  isFullscreenRequested = false;
   if (timerInterval) clearInterval(timerInterval);
 
   reviewSection.style.display = 'block';
@@ -873,7 +916,13 @@ function finishLesson() {
 
   if (lessonData) {
     localStorage.setItem(`${getStateKey(lessonData.id)}_finished`, 'true');
+    // Khi hoàn thành 100%, giải phóng khóa để học viên chọn bài khác
+    if (localStorage.getItem(ACTIVE_LESSON_KEY) === lessonData.id) {
+      localStorage.removeItem(ACTIVE_LESSON_KEY);
+    }
   }
+
+  updateLessonLockStatus();
 }
 
 /* ── Đổi Chế Độ Sáng / Tối ── */
@@ -908,6 +957,10 @@ function confirmReset() {
       localStorage.removeItem(`${getStateKey(lessonData.id)}_time`);
       localStorage.removeItem(`${getStateKey(lessonData.id)}_started`);
       localStorage.removeItem(`${getStateKey(lessonData.id)}_finished`);
+      localStorage.removeItem(`${getStateKey(lessonData.id)}_tab_switches`);
+      if (localStorage.getItem(ACTIVE_LESSON_KEY) === lessonData.id) {
+        localStorage.removeItem(ACTIVE_LESSON_KEY);
+      }
     }
     window.location.reload();
   }
@@ -1036,6 +1089,108 @@ function hideLoading() {
     overlay.classList.add('hidden');
     setTimeout(() => overlay.remove(), 400);
   }
+}
+
+/* ── 15. Kiểm soát chống thoát tab & toàn màn hình (Anti-Cheat / Focus Guard) ── */
+function updateLessonLockStatus() {
+  if (!btnBackPortal) return;
+  // Nếu bài chưa hoàn thành thì khóa nút đổi bài
+  if (!isFinished) {
+    btnBackPortal.classList.add('locked-lesson-btn');
+    btnBackPortal.title = '🔒 Em phải hoàn thành xong bài học này mới được quay lại chọn bài khác nhé!';
+  } else {
+    btnBackPortal.classList.remove('locked-lesson-btn');
+    btnBackPortal.title = 'Quay lại trang danh sách khóa học';
+  }
+}
+
+function handleBackPortalClick(e) {
+  if (!isFinished) {
+    e.preventDefault();
+    alert('🔒 KHÔNG THỂ ĐỔI BÀI HỌC!\n\nEm đã chọn bài này và đang trong quá trình học. Em cần hoàn thành tất cả nhiệm vụ và bấm "Nộp bài" xong thì mới được chuyển sang bài khác nhé!');
+    showToast('🔒 Em phải làm xong bài này trước khi chọn bài khác nhé!', 'warning');
+  }
+}
+
+function requestAppFullscreen() {
+  const elem = document.documentElement;
+  try {
+    if (!document.fullscreenElement) {
+      if (elem.requestFullscreen) {
+        elem.requestFullscreen().catch(err => {
+          console.warn('Fullscreen request blocked by browser policy:', err);
+        });
+      } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+      } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
+      }
+    }
+  } catch (err) {
+    console.warn('Lỗi requestFullscreen:', err);
+  }
+  if (fullscreenOverlay) fullscreenOverlay.style.display = 'none';
+}
+
+function handleResumeFromTabWarning() {
+  if (tabWarningOverlay) tabWarningOverlay.style.display = 'none';
+  requestAppFullscreen();
+}
+
+function setupAntiCheatListeners() {
+  // Lấy số lần chuyển tab đã lưu
+  if (lessonData) {
+    const savedCount = localStorage.getItem(`${getStateKey(lessonData.id)}_tab_switches`);
+    tabSwitchCount = savedCount ? parseInt(savedCount, 10) : 0;
+  }
+
+  // 1. Bắt sự kiện thoát tab / chuyển cửa sổ (Visibility Change & Blur)
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden && isStarted && !isFinished) {
+      handleTabLeave();
+    }
+  });
+
+  window.addEventListener('blur', () => {
+    // Chỉ kích hoạt khi đang làm bài và không phải đang tương tác trong modal kiểm tra
+    const isModalOpen = verifyModal && verifyModal.style.display === 'flex';
+    if (isStarted && !isFinished && !isModalOpen && !document.fullscreenElement) {
+      handleTabLeave();
+    }
+  });
+
+  // 2. Bắt sự kiện thoát chế độ Fullscreen
+  document.addEventListener('fullscreenchange', () => {
+    if (isStarted && !isFinished && isFullscreenRequested && !document.fullscreenElement) {
+      if (fullscreenOverlay && (!tabWarningOverlay || tabWarningOverlay.style.display === 'none')) {
+        fullscreenOverlay.style.display = 'flex';
+      }
+    } else if (document.fullscreenElement) {
+      if (fullscreenOverlay) fullscreenOverlay.style.display = 'none';
+    }
+  });
+
+  // 3. Chặn đóng / tải lại tab đột ngột khi đang làm bài
+  window.addEventListener('beforeunload', (e) => {
+    if (isStarted && !isFinished) {
+      e.preventDefault();
+      e.returnValue = 'Bài làm của em đang diễn ra và chưa nộp bài. Em có chắc chắn muốn rời đi không?';
+      return e.returnValue;
+    }
+  });
+}
+
+function handleTabLeave() {
+  tabSwitchCount++;
+  if (lessonData) {
+    localStorage.setItem(`${getStateKey(lessonData.id)}_tab_switches`, tabSwitchCount);
+  }
+  if (tabSwitchCountEl) {
+    tabSwitchCountEl.textContent = `🚨 Số lần rời tab: ${tabSwitchCount} lần`;
+  }
+  if (fullscreenOverlay) fullscreenOverlay.style.display = 'none';
+  if (tabWarningOverlay) tabWarningOverlay.style.display = 'flex';
+  playTone(220, 'sawtooth', 0.35, 0.25); // Âm thanh cảnh báo
 }
 
 // Phơi hàm ra ngoài window

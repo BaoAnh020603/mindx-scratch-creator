@@ -28,7 +28,7 @@
 
     <div class="header-actions">
       <!-- Nút đổi bài học / đổi khóa học -->
-      <a href="portal.html" class="btn-icon-pill" title="Quay lại trang danh sách khóa học">
+      <a href="index.html" class="btn-icon-pill" id="btn-back-portal" title="Quay lại trang danh sách khóa học">
         📚 <span>Đổi bài học</span>
       </a>
 
@@ -247,6 +247,41 @@
   ════════════════════════════════════════════════════════ -->
   <canvas id="confetti-canvas" aria-hidden="true"></canvas>
   <div id="toast" role="alert" aria-live="polite"></div>
+
+  <!-- ════════════════════════════════════════════════════════
+       5. POPUP CẢNH BÁO TOÀN MÀN HÌNH & THOÁT TAB (ANTI-CHEAT)
+  ════════════════════════════════════════════════════════ -->
+  <!-- Popup cảnh báo khi thoát tab hoặc chuyển cửa sổ -->
+  <div id="tab-warning-overlay" style="display:none;">
+    <div class="focus-alert-card">
+      <div class="focus-alert-icon">⚠️</div>
+      <div class="focus-alert-title">PHÁT HIỆN RỜI KHỎI BÀI HỌC!</div>
+      <div class="focus-alert-desc">
+        Hệ thống ghi nhận em vừa chuyển tab hoặc thoát khỏi màn hình làm bài.<br/>
+        Trong thời gian làm bài, em cần tập trung 100% trên màn hình Scratch nhé!
+      </div>
+      <div class="focus-badge-counter" id="tab-switch-count">
+        🚨 Số lần rời tab: 1 lần
+      </div>
+      <button class="btn-resume-focus" id="btn-resume-tab" type="button">
+        👉 Quay lại làm bài &amp; Vào toàn màn hình
+      </button>
+    </div>
+  </div>
+
+  <!-- Popup yêu cầu vào lại chế độ toàn màn hình nếu thoát Fullscreen -->
+  <div id="fullscreen-request-overlay" style="display:none;">
+    <div class="focus-alert-card">
+      <div class="focus-alert-icon">🖥️</div>
+      <div class="focus-alert-title">YÊU CẦU CHẾ ĐỘ TOÀN MÀN HÌNH</div>
+      <div class="focus-alert-desc">
+        Bài làm đang được tính giờ. Em không được thoát chế độ toàn màn hình cho đến khi nộp bài xong!
+      </div>
+      <button class="btn-resume-focus" id="btn-reenter-fullscreen" type="button">
+        🖥️ Bật lại chế độ Toàn màn hình
+      </button>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

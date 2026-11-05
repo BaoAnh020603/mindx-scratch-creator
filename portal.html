@@ -261,27 +261,78 @@
         const container = document.getElementById('courses-container');
         container.innerHTML = '';
 
+        // Kiểm tra xem học viên có đang làm dở bài nào không
+        const activeLessonId = localStorage.getItem('mindx_current_active_lesson');
+        let activeFinished = false;
+        if (activeLessonId) {
+          activeFinished = localStorage.getItem(`mindx_dashboard_${activeLessonId}_finished`) === 'true';
+        }
+        const hasUnfinishedLesson = activeLessonId && !activeFinished;
+
+        // Nếu có bài đang làm dở, hiển thị banner nhắc nhở ngay đầu trang
+        if (hasUnfinishedLesson) {
+          const alertBanner = document.createElement('div');
+          alertBanner.style.cssText = 'background:linear-gradient(135deg, #FEF2F2, #FEE2E2); border:2px solid #F87171; border-radius:12px; padding:16px 20px; margin-bottom:24px; display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap; box-shadow:0 4px 12px rgba(239,68,68,0.15);';
+          alertBanner.innerHTML = `
+            <div style="display:flex; align-items:center; gap:12px;">
+              <span style="font-size:32px;">🔒</span>
+              <div>
+                <div style="font-size:15px; font-weight:800; color:#991B1B;">BÀI HỌC HIỆN TẠI ĐANG DIỄN RA</div>
+                <div style="font-size:13px; font-weight:600; color:#7F1D1D;">Em đang làm dở bài học trước đó. Em cần hoàn thành bài đó trước khi mở bài khác nhé!</div>
+              </div>
+            </div>
+            <a href="lesson.html?lesson=${activeLessonId}" style="background:#DC2626; color:#fff; text-decoration:none; padding:10px 18px; border-radius:8px; font-size:13px; font-weight:800; display:inline-flex; align-items:center; gap:6px; box-shadow:0 3px 8px rgba(220,38,38,0.4);">
+              👉 Tiếp tục bài học đang làm
+            </a>
+          `;
+          container.appendChild(alertBanner);
+        }
+
         courses.forEach(course => {
           const section = document.createElement('div');
           section.className = 'course-section';
 
           let bodyContent = '';
           if (course.lessons && course.lessons.length > 0) {
-            const lessonsHtml = course.lessons.map(lesson => `
-              <a href="lesson.html?lesson=${lesson.id}" class="lesson-card active-lesson">
-                <div>
-                  <div class="lesson-title">${lesson.title}</div>
-                  <div class="lesson-sub">${lesson.subtitle}</div>
-                </div>
-                <div class="lesson-footer">
-                  <div class="lesson-meta">
-                    <span>⏱️ Tự chọn thời gian</span>
-                    <span>🎯 ${lesson.tasksCount} task</span>
+            const lessonsHtml = course.lessons.map(lesson => {
+              const isThisLessonActive = activeLessonId === lesson.id;
+              const isLocked = hasUnfinishedLesson && !isThisLessonActive;
+
+              if (isLocked) {
+                return `
+                  <div class="lesson-card" style="opacity:0.55; cursor:not-allowed; filter:grayscale(0.4); border-color:var(--border-color); position:relative;" onclick="alert('🔒 BÀI HỌC BỊ KHÓA!\n\nEm cần hoàn thành và nộp bài ở bài học đang làm dở trước khi chuyển sang bài này nhé!');">
+                    <div style="position:absolute; top:12px; right:12px; background:#EF4444; color:#fff; font-size:11px; font-weight:800; padding:3px 8px; border-radius:20px;">🔒 Đang bị khóa</div>
+                    <div>
+                      <div class="lesson-title">${lesson.title}</div>
+                      <div class="lesson-sub">${lesson.subtitle}</div>
+                    </div>
+                    <div class="lesson-footer">
+                      <div class="lesson-meta">
+                        <span>⏱️ Tự chọn thời gian</span>
+                        <span>🎯 ${lesson.tasksCount} task</span>
+                      </div>
+                      <div class="btn-enter-lesson" style="background:#94A3B8; cursor:not-allowed;">Bị khóa 🔒</div>
+                    </div>
                   </div>
-                  <div class="btn-enter-lesson">Vào học ngay ➜</div>
-                </div>
-              </a>
-            `).join('');
+                `;
+              }
+
+              return `
+                <a href="lesson.html?lesson=${lesson.id}" class="lesson-card active-lesson">
+                  <div>
+                    <div class="lesson-title">${lesson.title}</div>
+                    <div class="lesson-sub">${lesson.subtitle}</div>
+                  </div>
+                  <div class="lesson-footer">
+                    <div class="lesson-meta">
+                      <span>⏱️ Tự chọn thời gian</span>
+                      <span>🎯 ${lesson.tasksCount} task</span>
+                    </div>
+                    <div class="btn-enter-lesson">${isThisLessonActive ? 'Tiếp tục làm bài ➜' : 'Vào học ngay ➜'}</div>
+                  </div>
+                </a>
+              `;
+            }).join('');
             bodyContent = `<div class="lessons-grid">${lessonsHtml}</div>`;
           } else {
             bodyContent = `

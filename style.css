@@ -1464,3 +1464,99 @@ body.dark-mode #toast {
     gap: 8px;
   }
 }
+
+/* ── 15. Cảnh báo Thoát Tab & Toàn Màn Hình (Focus Lock) ── */
+#tab-warning-overlay, #fullscreen-request-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(8px);
+  z-index: 99999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: fadeInModal 0.25s ease;
+}
+
+.focus-alert-card {
+  background: var(--bg-card);
+  border: 3px solid #EF4444;
+  border-radius: var(--radius-lg);
+  max-width: 520px;
+  width: 100%;
+  padding: 28px 24px;
+  text-align: center;
+  box-shadow: 0 20px 40px rgba(239, 68, 68, 0.35);
+  animation: shake 0.4s ease;
+}
+
+.focus-alert-icon {
+  font-size: 56px;
+  margin-bottom: 12px;
+  animation: bounce-cat 0.8s infinite alternate ease-in-out;
+}
+
+.focus-alert-title {
+  font-size: 20px;
+  font-weight: 900;
+  color: #DC2626;
+  margin-bottom: 8px;
+}
+body.dark-mode .focus-alert-title {
+  color: #F87171;
+}
+
+.focus-alert-desc {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-main);
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+
+.focus-badge-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #FEE2E2;
+  color: #991B1B;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  border: 1px solid #FCA5A5;
+}
+body.dark-mode .focus-badge-counter {
+  background: rgba(239, 68, 68, 0.2);
+  color: #FCA5A5;
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.btn-resume-focus {
+  background: linear-gradient(135deg, #EF4444, #DC2626);
+  color: #FFFFFF;
+  border: none;
+  padding: 12px 24px;
+  border-radius: var(--radius-md);
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.4);
+  transition: var(--transition);
+  font-family: var(--font-main);
+  width: 100%;
+}
+.btn-resume-focus:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.55);
+}
+
+/* Khóa nút Đổi bài học khi đang làm */
+.btn-icon-pill.locked-lesson-btn {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+  pointer-events: auto;
+}
+
